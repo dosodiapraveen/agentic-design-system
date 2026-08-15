@@ -4,7 +4,7 @@
       'base-badge',
       `badge-${variant}`,
       `badge-${size}`,
-      { 'badge-pill': pill, 'badge-dot': dot }
+      { 'badge-pill': pill, 'badge-dot': dot, 'badge-pulse': pulse }
     ]"
   >
     <span v-if="dot" class="badge-dot-indicator"></span>
@@ -59,6 +59,10 @@ export default {
       default: ''
     },
     removable: {
+      type: Boolean,
+      default: false
+    },
+    pulse: {
       type: Boolean,
       default: false
     }
@@ -232,5 +236,81 @@ export default {
 
 .badge-text {
   display: inline-block;
+}
+
+/* Pulse animation for notification badges */
+.badge-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Subtle glow effect on pulse */
+.badge-pulse.badge-error {
+  animation: badge-pulse-error 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse-error {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.4);
+  }
+}
+
+.badge-pulse.badge-warning {
+  animation: badge-pulse-warning 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse-warning {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px 2px rgba(245, 158, 11, 0.4);
+  }
+}
+
+.badge-pulse.badge-success {
+  animation: badge-pulse-success 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse-success {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 172, 132, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px 2px rgba(16, 172, 132, 0.4);
+  }
+}
+
+.badge-pulse.badge-primary {
+  animation: badge-pulse-primary 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse-primary {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(108, 92, 231, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px 2px rgba(108, 92, 231, 0.4);
+  }
 }
 </style>
