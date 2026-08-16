@@ -138,6 +138,44 @@ export default {
         this.shake()
       }
     },
+    handleKeydown(e) {
+      // Focus trap: intercept Tab key
+      if (e.key === 'Tab') {
+        this.trapFocus(e)
+      }
+    },
+    trapFocus(e) {
+      const content = this.$refs.modalContent
+      if (!content) return
+
+      const focusableSelector = [
+        'button:not([disabled])',
+        '[href]',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"]):not([disabled])'
+      ].join(', ')
+
+      const focusableElements = Array.from(content.querySelectorAll(focusableSelector))
+        .filter(el => el.offsetParent !== null) // Filter out hidden elements
+
+      if (focusableElements.length === 0) return
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      // Shift+Tab on first element -> go to last
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault()
+        lastElement.focus()
+      }
+      // Tab on last element -> go to first
+      else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault()
+        firstElement.focus()
+      }
+    },
     shake() {
       const content = this.$refs.modalContent
       if (content) {
@@ -150,6 +188,7 @@ export default {
     onOpen() {
       this.previousActiveElement = document.activeElement
       document.body.style.overflow = 'hidden'
+      document.addEventListener('keydown', this.handleKeydown)
       this.$emit('open')
 
       this.$nextTick(() => {
@@ -161,12 +200,14 @@ export default {
     },
     onClose() {
       document.body.style.overflow = ''
+      document.removeEventListener('keydown', this.handleKeydown)
       this.previousActiveElement?.focus()
     }
   },
   beforeUnmount() {
     if (this.modelValue) {
       document.body.style.overflow = ''
+      document.removeEventListener('keydown', this.handleKeydown)
     }
   }
 }

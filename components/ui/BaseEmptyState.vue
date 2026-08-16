@@ -1,5 +1,5 @@
 <template>
-  <div :class="['empty-state', `empty-${size}`, { 'empty-compact': compact }]">
+  <div :class="['empty-state', `empty-${size}`, { 'empty-compact': compact, 'empty-animated': animated }]">
     <div v-if="icon || $slots.icon" class="empty-icon-wrapper">
       <slot name="icon">
         <div :class="['empty-icon-bg', `icon-${variant}`]">
@@ -79,6 +79,10 @@ export default {
     compact: {
       type: Boolean,
       default: false
+    },
+    animated: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['action'],
@@ -167,6 +171,27 @@ export default {
   height: 72px;
   border-radius: var(--radius-full);
   transition: all var(--transition-base);
+}
+
+/* Animation */
+.empty-animated .empty-icon-bg {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .empty-animated .empty-icon-bg {
+    animation: none;
+  }
 }
 
 /* Icon variants */

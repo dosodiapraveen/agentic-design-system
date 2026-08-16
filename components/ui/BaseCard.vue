@@ -6,6 +6,7 @@
       `card-${variant}`,
       {
         'card-clickable': clickable,
+        'card-hoverable': hoverable && !clickable,
         'card-selected': selected,
         'card-loading': loading,
         'no-padding': noPadding
@@ -77,6 +78,10 @@ export default {
       validator: (v) => ['default', 'outlined', 'elevated', 'flat'].includes(v)
     },
     clickable: {
+      type: Boolean,
+      default: false
+    },
+    hoverable: {
       type: Boolean,
       default: false
     },
@@ -153,6 +158,17 @@ export default {
   background: var(--color-gray-50);
 }
 
+/* Hoverable state (non-clickable cards that still want hover feedback) */
+.card-hoverable {
+  transition: all var(--transition-fast);
+}
+
+.card-hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--color-primary-200);
+}
+
 /* Clickable state */
 .card-clickable {
   cursor: pointer;
@@ -164,10 +180,12 @@ export default {
 .card-clickable:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--card-shadow-hover);
+  border-color: var(--color-primary-300);
 }
 
 .card-clickable:active:not(:disabled) {
   transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .card-clickable:focus-visible {
@@ -178,6 +196,17 @@ export default {
 .card-clickable:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .card-hoverable:hover,
+  .card-clickable:hover:not(:disabled) {
+    transform: none;
+  }
+  .card-clickable:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 /* Selected state */

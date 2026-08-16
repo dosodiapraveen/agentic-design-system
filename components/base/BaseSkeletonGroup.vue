@@ -63,6 +63,60 @@
       </div>
     </template>
 
+    <!-- Dashboard -->
+    <template v-else-if="variant === 'dashboard'">
+      <div class="skeleton-dashboard">
+        <!-- Search Bar -->
+        <BaseSkeleton variant="rectangle" height="48px" />
+
+        <!-- Stats Row -->
+        <div class="skeleton-stats">
+          <div v-for="i in 4" :key="'stat-' + i" class="skeleton-stat">
+            <div class="skeleton-stat-icon">
+              <BaseSkeleton variant="circle" size="lg" />
+            </div>
+            <div class="skeleton-stat-content">
+              <BaseSkeleton variant="text" size="sm" width="50%" />
+              <BaseSkeleton variant="text" size="xl" width="30%" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Widgets -->
+        <div class="skeleton-widgets">
+          <div v-for="i in 2" :key="'widget-' + i" class="skeleton-widget">
+            <div class="skeleton-widget-header">
+              <BaseSkeleton variant="circle" size="sm" />
+              <BaseSkeleton variant="text" size="md" width="120px" />
+            </div>
+            <div class="skeleton-widget-items">
+              <div v-for="j in 3" :key="'item-' + j" class="skeleton-widget-item">
+                <BaseSkeleton variant="text" size="sm" width="50px" />
+                <BaseSkeleton variant="text" :width="titleWidth(j)" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Notes/Content List -->
+    <template v-else-if="variant === 'content-list'">
+      <div class="skeleton-content-list">
+        <div v-for="i in count" :key="i" class="skeleton-content-item">
+          <div class="skeleton-content-header">
+            <BaseSkeleton variant="text" size="sm" width="80px" />
+            <BaseSkeleton variant="text" size="md" :width="titleWidth(i)" />
+          </div>
+          <BaseSkeleton variant="text" size="sm" width="90%" />
+          <BaseSkeleton variant="text" size="sm" width="70%" />
+          <div class="skeleton-content-footer">
+            <BaseSkeleton variant="text" size="sm" width="100px" />
+          </div>
+        </div>
+      </div>
+    </template>
+
     <!-- Default: Simple text lines -->
     <template v-else>
       <div class="skeleton-text">
@@ -84,7 +138,7 @@ export default {
     variant: {
       type: String,
       default: 'text',
-      validator: value => ['text', 'card-grid', 'list', 'article', 'table', 'stats'].includes(value)
+      validator: value => ['text', 'card-grid', 'list', 'article', 'table', 'stats', 'dashboard', 'content-list'].includes(value)
     },
     count: {
       type: Number,
@@ -228,5 +282,96 @@ export default {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+}
+
+/* Dashboard */
+.skeleton-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.skeleton-stat-icon {
+  flex-shrink: 0;
+}
+
+.skeleton-stat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.skeleton-widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-4);
+}
+
+.skeleton-widget {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-4);
+}
+
+.skeleton-widget-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-4);
+}
+
+.skeleton-widget-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.skeleton-widget-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+}
+
+/* Content List */
+.skeleton-content-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.skeleton-content-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+}
+
+.skeleton-content-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.skeleton-content-footer {
+  margin-top: var(--spacing-2);
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* Dashboard Stats - Enhanced */
+.skeleton-dashboard .skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.skeleton-dashboard .skeleton-stat {
+  flex-direction: row;
+  align-items: center;
 }
 </style>
