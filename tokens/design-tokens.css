@@ -423,16 +423,19 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   REDUCED MOTION ACCESSIBILITY
+   MOBILE TOUCH TARGETS
+   Ensure minimum 44px touch targets on touch devices
    ═══════════════════════════════════════════════════════════════════════════ */
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+@media (max-width: 640px) {
+  :root {
+    /* Increase minimum button sizes for better touch targets */
+    --button-height-sm: 40px;
+    --button-height-md: 44px;
+    /* Keep lg at 48px as it already meets the threshold */
+
+    /* Increase minimum input sizes */
+    --input-height-sm: 40px;
+    --input-height-md: 44px;
   }
 }

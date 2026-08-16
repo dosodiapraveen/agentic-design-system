@@ -6,7 +6,7 @@
         class="modal-backdrop"
         :style="{ zIndex: zIndex }"
         @click="handleBackdropClick"
-        @keydown.escape="handleEscape"
+        @keydown="handleKeydown"
       >
         <div
           ref="modalContent"
@@ -14,6 +14,7 @@
           role="dialog"
           :aria-modal="true"
           :aria-labelledby="titleId"
+          tabindex="-1"
           @click.stop
         >
           <!-- Header -->
@@ -51,6 +52,9 @@
 import BaseIcon from './BaseIcon.vue'
 
 let modalIdCounter = 0
+
+// Selector for focusable elements
+const FOCUSABLE_SELECTOR = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
 
 export default {
   name: 'BaseModal',
@@ -139,27 +143,20 @@ export default {
       }
     },
     handleKeydown(e) {
-      // Focus trap: intercept Tab key
+      // Handle Tab key for focus trapping
       if (e.key === 'Tab') {
         this.trapFocus(e)
       }
+      // Handle Escape key
+      if (e.key === 'Escape') {
+        this.handleEscape(e)
+      }
     },
     trapFocus(e) {
-      const content = this.$refs.modalContent
-      if (!content) return
+      const modal = this.$refs.modalContent
+      if (!modal) return
 
-      const focusableSelector = [
-        'button:not([disabled])',
-        '[href]',
-        'input:not([disabled])',
-        'select:not([disabled])',
-        'textarea:not([disabled])',
-        '[tabindex]:not([tabindex="-1"]):not([disabled])'
-      ].join(', ')
-
-      const focusableElements = Array.from(content.querySelectorAll(focusableSelector))
-        .filter(el => el.offsetParent !== null) // Filter out hidden elements
-
+      const focusableElements = modal.querySelectorAll(FOCUSABLE_SELECTOR)
       if (focusableElements.length === 0) return
 
       const firstElement = focusableElements[0]
@@ -188,26 +185,30 @@ export default {
     onOpen() {
       this.previousActiveElement = document.activeElement
       document.body.style.overflow = 'hidden'
-      document.addEventListener('keydown', this.handleKeydown)
       this.$emit('open')
 
       this.$nextTick(() => {
-        const focusable = this.$refs.modalContent?.querySelector(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-        focusable?.focus()
+        // Focus the first focusable element or the modal itself
+        const focusable = this.$refs.modalContent?.querySelector(FOCUSABLE_SELECTOR)
+        if (focusable) {
+          focusable.focus()
+        } else {
+          // If no focusable elements, focus the modal content itself
+          this.$refs.modalContent?.focus()
+        }
       })
     },
     onClose() {
       document.body.style.overflow = ''
-      document.removeEventListener('keydown', this.handleKeydown)
-      this.previousActiveElement?.focus()
+      // Return focus to the element that opened the modal
+      this.$nextTick(() => {
+        this.previousActiveElement?.focus()
+      })
     }
   },
   beforeUnmount() {
     if (this.modelValue) {
       document.body.style.overflow = ''
-      document.removeEventListener('keydown', this.handleKeydown)
     }
   }
 }
@@ -424,6 +425,12 @@ export default {
   .modal-lg,
   .modal-xl {
     max-width: 100%;
+  }
+
+  /* Larger touch target on mobile */
+  .modal-close {
+    width: 44px;
+    height: 44px;
   }
 }
 </style>
