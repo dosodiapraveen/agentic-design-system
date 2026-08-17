@@ -149,14 +149,12 @@ export function useSwipeGesture(options = {}) {
       })
     }
 
-    // Keep open if threshold passed and keepOpenOnThreshold is true
-    if (keepOpenOnThreshold && passedThreshold) {
-      // Snap to the max offset position
-      if (wasSwipingLeft) {
-        offsetX.value = -maxOffset
-      } else if (wasSwipingRight) {
-        offsetX.value = maxOffset
-      }
+    // Keep open if threshold passed and keepOpenOnThreshold is true — LEFT only.
+    // A right swipe must always close/snap back to the resting position; it must
+    // never stick open on the right side (swipe-to-delete reveals on the left).
+    if (keepOpenOnThreshold && passedThreshold && wasSwipingLeft) {
+      // Snap to the max offset position (reveal the left-side delete action)
+      offsetX.value = -maxOffset
     } else if (snapBack || !passedThreshold) {
       // Reset state (animation handled by CSS transition)
       offsetX.value = 0
