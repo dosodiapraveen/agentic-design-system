@@ -17,6 +17,7 @@ export { default as BaseSearchFilter } from './BaseSearchFilter.vue'
 export { default as BaseChart } from './BaseChart.vue'
 export { default as BaseThemeToggle } from './BaseThemeToggle.vue'
 export { default as BaseConfirmDialog } from './BaseConfirmDialog.vue'
+export { default as SwipeableItem } from './SwipeableItem.vue'
 
 // Plugin for global registration
 export const HermesUI = {
@@ -37,7 +38,8 @@ export const HermesUI = {
       BaseEmptyState: () => import('./BaseEmptyState.vue'),
       BaseSearchFilter: () => import('./BaseSearchFilter.vue'),
       BaseThemeToggle: () => import('./BaseThemeToggle.vue'),
-      BaseConfirmDialog: () => import('./BaseConfirmDialog.vue')
+      BaseConfirmDialog: () => import('./BaseConfirmDialog.vue'),
+      SwipeableItem: () => import('./SwipeableItem.vue')
     }
 
     // Register components globally (async)
