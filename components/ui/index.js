@@ -19,6 +19,14 @@ export { default as BaseThemeToggle } from './BaseThemeToggle.vue'
 export { default as BaseConfirmDialog } from './BaseConfirmDialog.vue'
 export { default as SwipeableItem } from './SwipeableItem.vue'
 
+// Mobile UX Components
+export { default as BaseBottomSheet } from './BaseBottomSheet.vue'
+export { default as BaseContextMenu } from './BaseContextMenu.vue'
+export { default as BaseFab } from './BaseFab.vue'
+export { default as BaseCollapsibleCard } from './BaseCollapsibleCard.vue'
+export { default as BaseOfflineIndicator } from './BaseOfflineIndicator.vue'
+export { default as BasePullToRefresh } from './BasePullToRefresh.vue'
+
 // Plugin for global registration
 export const HermesUI = {
   install(app) {
@@ -39,7 +47,14 @@ export const HermesUI = {
       BaseSearchFilter: () => import('./BaseSearchFilter.vue'),
       BaseThemeToggle: () => import('./BaseThemeToggle.vue'),
       BaseConfirmDialog: () => import('./BaseConfirmDialog.vue'),
-      SwipeableItem: () => import('./SwipeableItem.vue')
+      SwipeableItem: () => import('./SwipeableItem.vue'),
+      // Mobile UX Components
+      BaseBottomSheet: () => import('./BaseBottomSheet.vue'),
+      BaseContextMenu: () => import('./BaseContextMenu.vue'),
+      BaseFab: () => import('./BaseFab.vue'),
+      BaseCollapsibleCard: () => import('./BaseCollapsibleCard.vue'),
+      BaseOfflineIndicator: () => import('./BaseOfflineIndicator.vue'),
+      BasePullToRefresh: () => import('./BasePullToRefresh.vue')
     }
 
     // Register components globally (async)
