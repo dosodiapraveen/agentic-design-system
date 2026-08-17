@@ -101,6 +101,13 @@ export default {
       }
     }
 
+    // Handle right swipe to close when item is open
+    const handleSwipeRight = () => {
+      if (isOpen.value) {
+        isOpen.value = false
+      }
+    }
+
     const {
       onPointerDown,
       onPointerMove,
@@ -114,8 +121,10 @@ export default {
     } = useSwipeGesture({
       threshold: props.threshold,
       maxOffset: props.maxOffset,
-      direction: 'left',
+      direction: 'both', // Allow both directions so user can swipe right to close
+      keepOpenOnThreshold: props.keepOpenOnThreshold,
       onSwipeLeft: handleSwipeLeft,
+      onSwipeRight: handleSwipeRight,
       onSwipeEnd: handleSwipeEnd,
     })
 

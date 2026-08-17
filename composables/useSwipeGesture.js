@@ -22,6 +22,7 @@ export function useSwipeGesture(options = {}) {
     direction = 'left',       // 'left', 'right', or 'both'
     elasticity = 0.3,         // Resistance after hitting max (0-1)
     snapBack = true,          // Snap back when released before threshold
+    keepOpenOnThreshold = false, // Keep item open (don't snap back) when threshold is reached
     onSwipeLeft = null,
     onSwipeRight = null,
     onSwipeEnd = null,
@@ -131,6 +132,7 @@ export function useSwipeGesture(options = {}) {
 
     const wasSwipingLeft = offsetX.value < -threshold
     const wasSwipingRight = offsetX.value > threshold
+    const passedThreshold = wasSwipingLeft || wasSwipingRight
 
     if (wasSwipingLeft && onSwipeLeft) {
       onSwipeLeft()
@@ -147,14 +149,25 @@ export function useSwipeGesture(options = {}) {
       })
     }
 
-    // Reset state (animation handled by CSS transition)
-    if (snapBack || (!wasSwipingLeft && !wasSwipingRight)) {
+    // Keep open if threshold passed and keepOpenOnThreshold is true
+    if (keepOpenOnThreshold && passedThreshold) {
+      // Snap to the max offset position
+      if (wasSwipingLeft) {
+        offsetX.value = -maxOffset
+      } else if (wasSwipingRight) {
+        offsetX.value = maxOffset
+      }
+    } else if (snapBack || !passedThreshold) {
+      // Reset state (animation handled by CSS transition)
       offsetX.value = 0
     }
 
     isActive.value = false
     isSwiping.value = false
-    hasPassedThreshold.value = false
+    // Don't reset hasPassedThreshold if keeping open
+    if (!keepOpenOnThreshold || !passedThreshold) {
+      hasPassedThreshold.value = false
+    }
   }
 
   const onPointerCancel = () => {
